@@ -496,6 +496,7 @@ GameObject:
   - component: {fileID: 148533113}
   - component: {fileID: 148533112}
   - component: {fileID: 148533116}
+  - component: {fileID: 148533115}
   - component: {fileID: 148533111}
   m_Layer: 0
   m_Name: NetworkManager
@@ -513,10 +514,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 148533110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88c37d3deca7a834d80cfd8d3cfcc510, type: 3}
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkDiscovery: {fileID: 148533116}
+  port: 7777
+  NoDelay: 1
+  SendTimeout: 5000
+  ReceiveTimeout: 30000
+  serverMaxMessageSize: 16384
+  serverMaxReceivesPerTick: 10000
+  serverSendQueueLimitPerConnection: 10000
+  serverReceiveQueueLimitPerConnection: 10000
+  clientMaxMessageSize: 16384
+  clientMaxReceivesPerTick: 1000
+  clientSendQueueLimit: 10000
+  clientReceiveQueueLimit: 10000
 --- !u!114 &148533112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,7 +577,7 @@ MonoBehaviour:
   offlineScene: 
   onlineScene: 
   transport: {fileID: 148533112}
-  networkAddress: localhost
+  networkAddress: 10.20.30.129
   maxConnections: 100
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 2000900046939601902, guid: da5b6ab24b0910646b051bd992696ea9,
@@ -587,6 +599,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &148533115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148533110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88c37d3deca7a834d80cfd8d3cfcc510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkDiscovery: {fileID: 148533116}
 --- !u!114 &148533116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,17 +628,17 @@ MonoBehaviour:
   serverBroadcastListenPort: 47777
   enableActiveDiscovery: 1
   ActiveDiscoveryInterval: 3
-  transport: {fileID: 0}
+  transport: {fileID: 148533111}
   OnServerFound:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 148533111}
+      - m_Target: {fileID: 148533115}
         m_TargetAssemblyTypeName: Mirror.Discovery.NetworkDiscoveryHUD, Mirror.Components
         m_MethodName: OnDiscoveredServer
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
