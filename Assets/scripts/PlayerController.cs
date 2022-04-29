@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Mirror;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+
+public class PlayerController : NetworkBehaviour, IDamageable
 {
     [SerializeField] private Image healthBarImage;
     [SerializeField] private GameObject ui;
@@ -15,7 +14,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     
     [SerializeField] float mouseSen, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-
 
     [SerializeField] private Item[] items;
 
@@ -28,8 +26,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     
     
     Rigidbody rb;
-
-    PhotonView PV;
     
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
@@ -39,21 +35,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        PV = GetComponent<PhotonView>();
-
-        playermanager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Start()
     {
-        if (PV.IsMine)
+        if (isLocalPlayer)
         {
             EquipItem(0);
         }
         else
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+           Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
             Destroy(ui);
         }
@@ -61,17 +54,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     private void Update()
     {
-        if (!PV.IsMine)
+        if (!isLocalPlayer)
             return;
         
-        Look();
+       Look();
        Movement();
        Jump();
        SwitchGuns();
 
        if (transform.position.y <= -10f)
            Die();
-
     }
 
     void SwitchGuns()
@@ -147,21 +139,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         previousItemIndex = itemIndex;
 
-        if (PV.IsMine)
+        if(isLocalPlayer)
         {
             Hashtable hash = new Hashtable();
             hash.Add("itemIndex", itemIndex);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        if (!PV.IsMine && targetPlayer == photonView.Owner)
-        {
-            EquipItem((int)changedProps["itemIndex"]);
-        }
-    }
 
     void Look()
     {
@@ -181,30 +165,29 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     private void FixedUpdate()
     {
-        if (!PV.IsMine)
+        if (!isLocalPlayer)
             return;
         
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
+    [ClientRpc]
     public void TakeDamage(float Damage)
     {
-        PV.RPC("RPC_TakeDamage", RpcTarget.All, Damage);
+        if (!isLocalPlayer) {
+            currentHealth -= Damage;
+            healthBarImage.fillAmount = currentHealth / maxHealth;
+
+            if (currentHealth <= 0) {
+                Die();
+            }
+        }
     }
 
-    [PunRPC]
+
     void RPC_TakeDamage(float Damage)
     {
-        if (!PV.IsMine)
-            return;
-        
-        currentHealth -= Damage;
-        healthBarImage.fillAmount = currentHealth / maxHealth;
-        
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+
     }
 
     void Die()

@@ -35,29 +35,4 @@ public class GroundCheck : MonoBehaviour
         
         _controller.SetGroundedState(true);
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject == _controller.gameObject)
-            return;
-                
-        _controller.SetGroundedState(true);   
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if(collision.gameObject == _controller.gameObject)
-            return;
-                
-        _controller.SetGroundedState(false);       
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if(collision.gameObject == _controller.gameObject)
-            return;
-                
-        _controller.SetGroundedState(true);
-        
-    }
 }
