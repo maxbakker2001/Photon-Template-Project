@@ -493,10 +493,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 148533114}
+  - component: {fileID: 148533112}
   - component: {fileID: 148533113}
+  - component: {fileID: 148533111}
   - component: {fileID: 148533116}
   - component: {fileID: 148533115}
-  - component: {fileID: 148533111}
+  - component: {fileID: 148533117}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -528,6 +530,28 @@ MonoBehaviour:
   clientMaxReceivesPerTick: 1000
   clientSendQueueLimit: 10000
   clientReceiveQueueLimit: 10000
+--- !u!114 &148533112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148533110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28496b776660156428f00cf78289c1ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnServerAuthenticated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientAuthenticated:
+    m_PersistentCalls:
+      m_Calls: []
+  serverUsername: 
+  serverPassword: 
+  username: 
+  password: 
 --- !u!114 &148533113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,9 +571,9 @@ MonoBehaviour:
   offlineScene: 
   onlineScene: 
   transport: {fileID: 148533111}
-  networkAddress: 10.20.30.129
+  networkAddress: localhost
   maxConnections: 100
-  authenticator: {fileID: 0}
+  authenticator: {fileID: 148533112}
   playerPrefab: {fileID: 2000900046939601902, guid: da5b6ab24b0910646b051bd992696ea9,
     type: 3}
   autoCreatePlayer: 1
@@ -614,6 +638,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &148533117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148533110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d7da4e566d24ea7b0e12178d934b648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &298675916
 GameObject:
   m_ObjectHideFlags: 0

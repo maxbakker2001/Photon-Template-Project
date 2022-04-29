@@ -14,7 +14,8 @@ public class SingleShotGun : Gun
 
     [Command]
     void Shoot() {
-        if (!isLocalPlayer) {
+        if (!isLocalPlayer) return;
+                
             Debug.Log("Using gun" + ItemInfo.itemName);
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             ray.origin = cam.transform.position;
@@ -23,8 +24,7 @@ public class SingleShotGun : Gun
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)ItemInfo).Damage);
                 RpcShoot(hit.point, hit.normal);
             }
-            RpcShoot(hit.point, hit.normal);
-        }
+            //RpcShoot(hit.point, hit.normal);
     }
 
     [Command]
